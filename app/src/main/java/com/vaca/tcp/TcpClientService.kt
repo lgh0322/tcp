@@ -20,22 +20,24 @@ import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
 
 class TcpClientService : Service() {
+
+
+
     private val working = AtomicBoolean(true)
     private var socket: Socket? = null
     private var dataInputStream: DataInputStream? = null
-    private var dataOutputStream: DataOutputStream? = null
+
     private val message = "Hello Server"
     private val runnable = Runnable {
-        while(true){
-            sleep(10000)
             try {
                 val ip = InetAddress.getByName(IP)
                 socket = Socket(ip, PORT)
+
                 dataInputStream = DataInputStream(socket!!.getInputStream())
                 dataOutputStream = DataOutputStream(socket!!.getOutputStream())
                 while (working.get()) {
                     try {
-                        dataOutputStream!!.writeUTF(message)
+                        dataOutputStream!!.writeChars(message)
                         Log.i(TAG, "Received: " + dataInputStream!!.readUTF())
                         Thread.sleep(2000L)
                     } catch (e: IOException) {
@@ -55,11 +57,13 @@ class TcpClientService : Service() {
                             ex.printStackTrace()
                         }
                     }
+                    sleep(2000)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        }
+            sleep(2000)
+
 
     }
 
@@ -100,7 +104,8 @@ class TcpClientService : Service() {
 
     companion object {
         val TAG = TcpClientService::class.java.simpleName
-        private const val IP = "192.168.5.108"
+        private const val IP = "139.9.206.3"
         private const val PORT =6666
+        var dataOutputStream: DataOutputStream? = null
     }
 }
