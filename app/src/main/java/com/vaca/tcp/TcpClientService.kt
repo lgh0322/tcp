@@ -29,6 +29,7 @@ class TcpClientService : Service() {
 
     private val message = "Hello Server"
     private val runnable = Runnable {
+        sleep(3000)
             try {
                 val ip = InetAddress.getByName(IP)
                 socket = Socket(ip, PORT)
